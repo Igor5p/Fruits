@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍎 Размер малыша — какой фрукт?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fdf8f3;
+      --card: #fff9f4;
+      --accent: #e07a5f;
+      --accent-soft: #f4a582;
+      --text: #2d3142;
+      --text-muted: #6b7280;
+      --green: #81b29a;
+      --yellow: #f2cc8f;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background-image: radial-gradient(ellipse at 20% 80%, rgba(244, 165, 130, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(129, 178, 154, 0.1) 0%, transparent 50%);
+    }
+
+    .container {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 5vw, 32px);
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .input-wrap {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    input[type="number"] {
+      font-family: inherit;
+      font-size: 28px;
+      font-weight: 600;
+      width: 100px;
+      padding: 12px 16px;
+      border: 2px solid var(--accent-soft);
+      border-radius: 16px;
+      background: white;
+      color: var(--text);
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(224, 122, 95, 0.2);
+    }
+
+    .input-wrap span {
+      font-size: 18px;
+      color: var(--text-muted);
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(224, 122, 95, 0.35);
+    }
+
+    .fruit-card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 40px 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      border: 1px solid rgba(224, 122, 95, 0.2);
+      margin-top: 24px;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .fruit-card.hidden { opacity: 0; transform: scale(0.96); pointer-events: none; }
+    .fruit-card.visible { opacity: 1; transform: scale(1); }
+
+    .fruit-emoji {
+      font-size: clamp(72px, 18vw, 120px);
+      line-height: 1;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .fruit-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .fruit-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .week-label {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .slider-wrap {
+      margin: 20px 0;
+      width: 100%;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .slider-wrap input[type="range"] {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+      border-radius: 4px;
+    }
+
+    .slider-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border: 3px solid var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .error-msg {
+      color: #c75b5b;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🍎 Какой фрукт сегодня?</h1>
+    <p class="subtitle">Введи неделю беременности — узнай размер малыша</p>
+
+    <div class="input-wrap">
+      <input type="number" id="weeks" min="1" max="42" value="12" placeholder="—" inputmode="numeric">
+      <span>неделя</span>
+    </div>
+
+    <div class="slider-wrap">
+      <input type="range" id="slider" min="1" max="42" value="12">
+    </div>
+
+    <button type="button" id="go">Показать</button>
+    <p class="error-msg" id="error"></p>
+
+    <div class="fruit-card hidden" id="card">
+      <p class="week-label" id="weekLabel">Неделя 12</p>
+      <div class="fruit-emoji" id="emoji">🍑</div>
+      <p class="fruit-name" id="fruitName">Слива</p>
+      <p class="fruit-desc" id="fruitDesc">Малыш размером со сливу — около 6 см от макушки до попки.</p>
+    </div>
+  </div>
+
+  <script>
+   const fruits = [
+  { week: 4, emoji: '🌱', name: 'Маковое зёрнышко', desc: 'Крошечный зародыш — едва различимый, самое начало.' },
+  { week: 5, emoji: '🍚', name: 'Рисинка', desc: 'Размером с рисинку — начинает биться сердечко.' },
+  { week: 6, emoji: '🫘', name: 'Чечевинка', desc: 'Как зёрнышко чечевицы — уже формируются черты.' },
+  { week: 7, emoji: '🫐', name: 'Черничка', desc: 'Черничка — около 1 см, активно растёт.' },
+  { week: 8, emoji: '🍇', name: 'Виноградинка', desc: 'Размером с виноградинку — уже видно на УЗИ.' },
+  { week: 9, emoji: '🍒', name: 'Вишенка', desc: 'Вишенка — формируются пальчики.' },
+  { week: 10, emoji: '🍓', name: 'Клубничка', desc: 'Как клубничка — около 3 см от макушки до попки.' },
+  { week: 11, emoji: '🫒', name: 'Лаймик', desc: 'Размером с лаймик — начинает двигаться.' },
+  { week: 12, emoji: '🍑', name: 'Сливка', desc: 'Сливка — около 6 см, слышно сердцебиение.' },
+  { week: 13, emoji: '🍋', name: 'Лимончик', desc: 'Лимончик — заканчивается первый триместр.' },
+  { week: 14, emoji: '🍋', name: 'Лимончик', desc: 'Как лимончик — начинается второй триместр.' },
+  { week: 15, emoji: '🍎', name: 'Яблочко', desc: 'Яблочко — активно глотает и пинается.' },
+  { week: 16, emoji: '🥑', name: 'Авокадо', desc: 'Авокадо — около 12 см, пол уже виден.' },
+  { week: 17, emoji: '🍐', name: 'Грушка', desc: 'Грушка — формируется жировая прослойка.' },
+  { week: 18, emoji: '🍠', name: 'Бататик', desc: 'Как бататик — около 14 см, чувствуются движения.' },
+  { week: 19, emoji: '🍅', name: 'Помидорка', desc: 'Размером с крупную помидорку.' },
+  { week: 20, emoji: '🍌', name: 'Бананчик', desc: 'Бананчик — половина пути пройдена!' },
+  { week: 21, emoji: '🥕', name: 'Морковочка', desc: 'Как морковочка — около 26 см.' },
+  { week: 22, emoji: '🥒', name: 'Огурчик', desc: 'Огурчик — сформированы бровки и ресницы.' },
+  { week: 23, emoji: '🥭', name: 'Мангошка', desc: 'Мангошка — слышит твой голос.' },
+  { week: 24, emoji: '🌽', name: 'Початочек', desc: 'Размером с початочек кукурузы — около 30 см.' },
+  { week: 25, emoji: '🥬', name: 'Капустка', desc: 'Как капустный кочанчик.' },
+  { week: 26, emoji: '🥦', name: 'Брокколи', desc: 'Кочанчик брокколи — открывает глазки.' },
+  { week: 27, emoji: '🥬', name: 'Цветная капустка', desc: 'Размером с головку цветной капустки.' },
+  { week: 28, emoji: '🍆', name: 'Баклажанчик', desc: 'Баклажанчик — начало третьего триместра!' },
+  { week: 29, emoji: '🥬', name: 'Пекинская капустка', desc: 'Около 38 см — набирает вес.' },
+  { week: 30, emoji: '🥒', name: 'Длинный огурчик', desc: 'Большой огурчик — около 40 см.' },
+  { week: 31, emoji: '🥥', name: 'Кокосик', desc: 'Кокосик — активно накапливает жир.' },
+  { week: 32, emoji: '🍈', name: 'Дынька', desc: 'Дынька — около 42 см.' },
+  { week: 33, emoji: '🍍', name: 'Ананасик', desc: 'Как ананасик — зреет к рождению.' },
+  { week: 34, emoji: '🍈', name: 'Дынька-канталупка', desc: 'Около 45 см — почти готов.' },
+  { week: 35, emoji: '🍈', name: 'Медовая дынька', desc: 'Медовая дынька — лёгкие почти созрели.' },
+  { week: 36, emoji: '🍉', name: 'Папайка', desc: 'Папайка — большинство рождаются с 37-й недели.' },
+  { week: 37, emoji: '🥬', name: 'Мангольдик', desc: 'Доношенный — размером с пучочек мангольдика.' },
+  { week: 38, emoji: '🍉', name: 'Мини-арбузик', desc: 'Маленький арбузик — 48–50 см.' },
+  { week: 39, emoji: '🍉', name: 'Арбузик', desc: 'Арбузик — скоро встреча!' },
+  { week: 40, emoji: '🍉', name: 'Арбузик', desc: 'Полноценный арбузик — привет, малыш!' },
+  { week: 41, emoji: '🎃', name: 'Тыковка', desc: 'Переношенный — как маленькая тыковка.' },
+  { week: 42, emoji: '🎃', name: 'Тыковка', desc: 'Крупная тыковка — ждём встречи!' }
+];
+
+    function getFruit(week) {
+      const num = Math.min(42, Math.max(1, Math.floor(Number(week))));
+      for (let i = fruits.length - 1; i >= 0; i--) {
+        if (num >= fruits[i].week) return { ...fruits[i], week: num };
+      }
+      return { ...fruits[0], week: num };
+    }
+
+    const card = document.getElementById('card');
+    const emojiEl = document.getElementById('emoji');
+    const nameEl = document.getElementById('fruitName');
+    const descEl = document.getElementById('fruitDesc');
+    const weekLabelEl = document.getElementById('weekLabel');
+    const input = document.getElementById('weeks');
+    const slider = document.getElementById('slider');
+    const btn = document.getElementById('go');
+    const err = document.getElementById('error');
+
+    function show(week) {
+      const data = getFruit(week);
+      weekLabelEl.textContent = `Неделя ${data.week}`;
+      emojiEl.textContent = data.emoji;
+      nameEl.textContent = data.name;
+      descEl.textContent = data.desc;
+      card.classList.remove('hidden');
+      card.classList.add('visible');
+      err.textContent = '';
+    }
+
+    function syncInputs() {
+      const v = Math.min(42, Math.max(1, parseInt(input.value, 10) || 12));
+      input.value = v;
+      slider.value = v;
+    }
+
+    btn.addEventListener('click', () => {
+      syncInputs();
+      show(input.value);
+    });
+
+    input.addEventListener('input', () => {
+      const v = parseInt(input.value, 10);
+      if (v >= 1 && v <= 42) slider.value = v;
+    });
+    input.addEventListener('change', syncInputs);
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') btn.click();
+    });
+
+    slider.addEventListener('input', () => {
+      input.value = slider.value;
+      show(slider.value);
+    });
+
+    // Показать при загрузке
+    show(12);
+  </script>
+</body>
+</html>
